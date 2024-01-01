@@ -1,7 +1,13 @@
+@import "./assets/fonts.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 .btn {
     @apply bg-black/80 text-white rounded px-4 py-2;
+}
+
+.font-butler {
+    font-family: "Butler";
 }
