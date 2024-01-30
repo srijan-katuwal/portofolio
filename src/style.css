@@ -1,8 +1,13 @@
 @import "./assets/fonts.css";
+@import "./assets/fontello.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
 
 .btn {
     @apply bg-black/80 text-white rounded px-4 py-2;
@@ -10,4 +15,24 @@
 
 .font-butler {
     font-family: "Butler";
+}
+
+input {
+    @apply bg-black/5;
+    border: none;
+}
+
+input:focus {
+    outline: none;
+    padding: 6px;
+    border-bottom: 2px solid #000000;
+}
+
+label {
+    color: #696969;
+}
+
+.font-fontello:before {
+    font-family: 'fontello';
+    display: inline-block;
 }

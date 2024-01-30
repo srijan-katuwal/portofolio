@@ -6,9 +6,9 @@
       <h2>Srijan K.</h2>
       <nav>
         <ul class="flex gap-10">
-          <li><router-link to="home">Home</router-link></li>
+          <li><router-link to="/">Home</router-link></li>
           <li><router-link to="blog">Blog</router-link></li>
-          <li><router-link to="contact">Contact</router-link></li>
+          <!-- <li><router-link to="contact">Contact</router-link></li> -->
         </ul>
       </nav>
     </div>
