@@ -42,7 +42,7 @@ const props = defineProps({
   align-items: center;
 }
 .modal-container {
-  width: 600px;
+  width: 700px;
   background: white;
 }
 </style>

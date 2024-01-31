@@ -53,4 +53,23 @@ const ADD_BLOG = function (request) {
     })
 }
 
-export { ADD_BLOG, UPLOAD_IMAGE };
+const GET_IMAGES = function () {
+    return new Promise((resolve, reject) => {
+
+        var config = {
+            method: 'get',
+            url: `${baseURL}/blog/images`,
+            headers: {}
+        };
+
+        axios(config)
+            .then(function (response) {
+                resolve(response);
+            })
+            .catch(function (error) {
+                reject(error);
+            });
+    })
+}
+
+export { ADD_BLOG, UPLOAD_IMAGE, GET_IMAGES };
