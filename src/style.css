@@ -37,3 +37,7 @@ label {
     font-family: 'fontello';
     display: inline-block;
 }
+
+.Vue-Toastification__toast--error {
+    text-transform: capitalize;
+}

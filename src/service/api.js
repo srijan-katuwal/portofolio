@@ -1,7 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 
-const baseURL = "http://localhost:3000";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const UPLOAD_IMAGE = function (request) {
     return new Promise((resolve, reject) => {
@@ -11,7 +11,7 @@ const UPLOAD_IMAGE = function (request) {
 
         var config = {
             method: 'post',
-            url: `${baseURL}/blog/image`,
+            url: `${API_URL}/blog/image`,
             data: data
         };
 
@@ -31,15 +31,15 @@ const ADD_BLOG = function (request) {
         var data = new FormData();
 
         var data = qs.stringify({
-            'title': 'test',
+            'title': request.title,
             'body': JSON.stringify(request.body),
-            'author': 'srijan',
+            'author': request.author,
             'previewImage': request.previewImage
         });
 
         var config = {
             method: 'post',
-            url: `${baseURL}/blog`,
+            url: `${API_URL}/blog`,
             data: data
         };
 
@@ -58,7 +58,7 @@ const GET_IMAGES = function () {
 
         var config = {
             method: 'get',
-            url: `${baseURL}/blog/images`,
+            url: `${API_URL}/blog/images`,
             headers: {}
         };
 

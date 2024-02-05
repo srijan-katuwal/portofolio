@@ -5,19 +5,21 @@ import Quill from "quill";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.bubble.css";
 import "quill/dist/quill.snow.css";
-import Toast from "@vuesimple/vs-toast";
-import { ADD_BLOG, UPLOAD_IMAGE } from "../service/api.js";
+import { useToast } from "vue-toastification";
+import { ADD_BLOG } from "../service/api.js";
 
 import Navbar from "../components/Navbar.vue";
-import InputImage from "../components/InputImage.vue";
+import ImageInput from "../components/ImageInput.vue";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const router = useRouter();
 let quill = null;
 const editor = ref(null);
 const title = ref("");
+const author = ref("");
 const previewImage = ref(null);
-const previewImagePath = ref(null);
-// const toolbar = ref({});
+const toast = useToast();
 
 onMounted(() => {
   quill = new Quill(editor.value, {
@@ -29,43 +31,18 @@ onMounted(() => {
 
 const saveBlog = async () => {
   const req = {
-    head: title.value,
+    title: title.value,
+    author: author.value,
     body: quill.getContents(),
-    previewImage: previewImagePath.value,
+    previewImage: previewImage.value,
   };
   const res = await ADD_BLOG(req);
   if (res.data) {
-    Toast.show({
-      title: "Data Saved Successfully",
-      message: res.data,
-      variant: "success",
-    });
+    toast.success(res.data);
     router.push("/");
   } else if (res.errors) {
-    Toast.show({
-      title: "Couldn't Save Data",
-      message: res.errors,
-      variant: "error",
-    });
-  }
-};
-
-const uploadImage = async (e) => {
-  const req = {
-    image: e.target.files[0],
-  };
-  try {
-    const res = await UPLOAD_IMAGE(req);
-    console.log(res);
-    if (res.image) {
-      previewImage.value = res.image;
-      previewImagePath.value = res.imagePath;
-    }
-  } catch (err) {
-    Toast.show({
-      title: "Couldn't Save Image",
-      message: err?.response?.data?.errors,
-      variant: "error",
+    res.errors.forEach((err) => {
+      toast.error(err);
     });
   }
 };
@@ -87,35 +64,31 @@ const uploadImage = async (e) => {
 
         <div class="row-span-2">
           <label for="previewImage">Preview Image</label>
-          <InputImage class="w-1/2" />
-
-          <!--<img
-            v-if="previewImage"
-            :src="previewImage"
-            class="h-full"
-            @click=""
+          <ImageInput
+            v-if="!previewImage"
+            class="w-1/2"
+            @onUpload="(image) => (previewImage = image)"
           />
 
           <div
             v-else
-            class="h-full w-40 btn-select-image border-2 border-black/5 hover:cursor-pointer border-box flex justify-center items-center"
+            class="previewImageBox border-dashed border-2 flex items-center justify-center flex-col gap-4 bg-slate-100 relative"
           >
-            Select Image
+            <img :src="API_URL + previewImage" />
+            <div class="absolute top-0 right-0 w-full h-full">
+              <span
+                class="font-fontello text-2xl text-yello-900 absolute right-3 top-3 hover:cursor-pointer icon-trash"
+                @click="previewImage = null"
+              ></span>
+            </div>
           </div>
-          <input
-            id="previewImage"
-            type="file"
-            accept="image/*"
-            @change="uploadImage"
-            class="hidden"
-          /> -->
         </div>
 
         <div class="row-span-1">
           <label for="editorHeading">Author</label>
           <input
             id="editorHeading"
-            v-model="title"
+            v-model="author"
             class="border border-black/20 w-full h-10"
           />
         </div>
@@ -132,5 +105,8 @@ const uploadImage = async (e) => {
 <style scoped>
 .btn-select-image {
   color: #505050;
+}
+.previewImageBox img {
+  height: 10em;
 }
 </style>

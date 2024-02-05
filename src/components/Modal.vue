@@ -17,16 +17,12 @@ const props = defineProps({
         ></span>
       </div>
       <div class="bg-white py-8 px-6">
-        <slot></slot>
+        <slot name="body"></slot>
       </div>
       <div
-        class="bg-slate-100 py-3 border-b cursor-pointer px-4"
-        @click="$emit('close')"
+        class="bg-slate-100 py-3 border-b cursor-pointer px-4 flex justify-between items-center"
       >
-        <span
-          class="border border-neutral-300 py-1 px-3 inline-block rounded text-neutral-500"
-          >Cancel</span
-        >
+        <slot name="button"></slot>
       </div>
     </div>
   </div>
