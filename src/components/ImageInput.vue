@@ -14,6 +14,10 @@ const previewImageButton = ref(null);
 const currentImages = ref([]);
 const emit = defineEmits(["onUpload"]);
 
+import { useToast } from "vue-toastification";
+
+const Toast = useToast();
+
 onMounted(async () => {
   const res = await GET_IMAGES();
   try {
@@ -37,11 +41,7 @@ const uploadImage = async (e) => {
       newUpload.value = res.imagePath;
     }
   } catch (err) {
-    Toast.show({
-      title: "Couldn't Save Image",
-      message: err?.response?.data?.errors,
-      variant: "error",
-    });
+    Toast.error("Couldn't Save Image");
   }
 };
 
@@ -50,7 +50,11 @@ const selectFile = () => {
 };
 
 const updateForm = () => {
-  emit("onUpload", currentImages.value[uploadIndex.value].imagePath);
+  if (uploadType.value == 1) {
+    emit("onUpload", currentImages.value[uploadIndex.value].imagePath);
+  } else if (uploadType.value == 2) {
+    emit("onUpload", newUpload.value);
+  }
   toggleModal.value = false;
 };
 </script>

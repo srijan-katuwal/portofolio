@@ -5,9 +5,10 @@ import Quill from "quill";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.bubble.css";
 import "quill/dist/quill.snow.css";
-import { useToast } from "vue-toastification";
+
 import { ADD_BLOG } from "../service/api.js";
 
+import { useToast } from "vue-toastification";
 import Navbar from "../components/Navbar.vue";
 import ImageInput from "../components/ImageInput.vue";
 
@@ -19,7 +20,8 @@ const editor = ref(null);
 const title = ref("");
 const author = ref("");
 const previewImage = ref(null);
-const toast = useToast();
+
+const Toast = useToast();
 
 onMounted(() => {
   quill = new Quill(editor.value, {
@@ -38,11 +40,11 @@ const saveBlog = async () => {
   };
   const res = await ADD_BLOG(req);
   if (res.data) {
-    toast.success(res.data);
+    Toast.success(res.data);
     router.push("/");
   } else if (res.errors) {
     res.errors.forEach((err) => {
-      toast.error(err);
+      Toast.error(err);
     });
   }
 };
@@ -66,7 +68,6 @@ const saveBlog = async () => {
           <label for="previewImage">Preview Image</label>
           <ImageInput
             v-if="!previewImage"
-            class="w-1/2"
             @onUpload="(image) => (previewImage = image)"
           />
 
