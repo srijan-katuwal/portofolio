@@ -34,6 +34,7 @@ const ADD_BLOG = function (request) {
             'title': request.title,
             'body': JSON.stringify(request.body),
             'author': request.author,
+            'summary': request.summary,
             'previewImage': request.previewImage
         });
 
@@ -72,4 +73,22 @@ const GET_IMAGES = function () {
     })
 }
 
-export { ADD_BLOG, UPLOAD_IMAGE, GET_IMAGES };
+const GET_BLOGS = function() {
+    return new Promise((resolve, reject) => {
+
+        var config = {
+            method: 'get',
+            url: `${API_URL}/blog`,
+        };
+
+        axios(config)
+            .then(function (response) {
+                resolve(response);
+            })
+            .catch(function (error) {
+                reject(error);
+            });
+    })
+}
+
+export { ADD_BLOG, UPLOAD_IMAGE, GET_IMAGES, GET_BLOGS };

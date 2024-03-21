@@ -43,7 +43,7 @@ let technologies = ref([
   <section class="container mx-auto mt-20">
     <header>
       <h1 class="mx-auto text-5xl text-center mt-52 font-bold font-butler">
-        Full Stack Developer and Mentor
+        Full Stack Developer
       </h1>
       <p
         class="mt-6 w-3/4 text-center text-xl mx-auto font-normal text-black/70"
@@ -71,8 +71,10 @@ let technologies = ref([
   <!-- <section class="container mx-auto">
     <h1 class="text-xl mt-10 mb-6">Blog</h1>
     <router-link to="/blog/create" class="btn">Write Blog</router-link>
+  </section> -->
+  <section class="my-40">
+    <Blog class="mt-10"></Blog>
   </section>
-  <Blog class="mt-10"></Blog> -->
 </template>
 
 <style></style>

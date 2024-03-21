@@ -19,6 +19,7 @@ let quill = null;
 const editor = ref(null);
 const title = ref("");
 const author = ref("");
+const summary = ref("");
 const previewImage = ref(null);
 
 const Toast = useToast();
@@ -35,13 +36,13 @@ const saveBlog = async () => {
   const req = {
     title: title.value,
     author: author.value,
+    summary: summary.value,
     body: quill.getContents(),
     previewImage: previewImage.value,
   };
   const res = await ADD_BLOG(req);
   if (res.data) {
-    Toast.success(res.data);
-    router.push("/");
+    Toast.success(res.msg);
   } else if (res.errors) {
     res.errors.forEach((err) => {
       Toast.error(err);
@@ -53,7 +54,7 @@ const saveBlog = async () => {
 <template>
   <div class="w-full h-screen">
     <Navbar />
-    <div class="container mx-auto py-10">
+    <div class="container mx-auto py-10 mt-20">
       <div class="grid grid-cols-2 gap-10">
         <div class="row-span-1">
           <label for="editorHeading">Title</label>
@@ -64,7 +65,7 @@ const saveBlog = async () => {
           />
         </div>
 
-        <div class="row-span-2">
+        <div class="row-span-3">
           <label for="previewImage">Preview Image</label>
           <ImageInput
             v-if="!previewImage"
@@ -86,11 +87,20 @@ const saveBlog = async () => {
         </div>
 
         <div class="row-span-1">
-          <label for="editorHeading">Author</label>
+          <label for="editorAuthor">Author</label>
           <input
-            id="editorHeading"
+            id="editorAuthor"
             v-model="author"
             class="border border-black/20 w-full h-10"
+          />
+        </div>
+        <div class="row-span-1">
+          <label for="editorSummary">Summary</label>
+          <textarea
+            id="editorSummary"
+            rows="3"
+            v-model="summary"
+            class="border border-black/20 w-full"
           />
         </div>
       </div>
@@ -108,6 +118,6 @@ const saveBlog = async () => {
   color: #505050;
 }
 .previewImageBox img {
-  height: 10em;
+  height: 18em;
 }
 </style>

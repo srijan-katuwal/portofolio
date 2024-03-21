@@ -1,98 +1,81 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { Splide } from "@splidejs/splide";
 import "@splidejs/splide/css";
 import { RouterLink } from "vue-router";
+import { GET_BLOGS } from "../service/api.js";
+import { Splide, SplideTrack, SplideSlide } from "@splidejs/vue-splide";
 
-const blogs = [
-  {
-    title:
-      "AI Search - Build search & discovery experiences w/ APIs, libraries, CLI & More Sign up for Free",
-    body: "Test body",
-    author: "Srijan",
+const API_URL = import.meta.env.VITE_API_URL;
+
+const blogs = ref([]);
+const spliderOpt = {
+  type: "loop",
+  perPage: 3,
+  perMove: 1,
+  interval: 5000,
+  autoplay: true,
+  gap: 40,
+  classes: {
+    prev: "splide__arrow--prev custom-prev-button",
+    next: "splide__arrow--next custom-next-button",
   },
-  {
-    title: "Using ts-node? Here's a tip speed up your development",
-    body: "Test body",
-    author: "Srijan",
+  breakpoints: {
+    768: {
+      perPage: 2,
+    },
+    500: {
+      perPage: 1,
+    },
   },
-  {
-    title:
-      "AI Search - Build search & discovery experiences w/ APIs, libraries, CLI & More Sign up for Free",
-    body: "Test body",
-    author: "Srijan",
-  },
-];
-const blogSlider = ref(null);
+};
 
 onMounted(() => {
-  const slider = new Splide(blogSlider.value, {
-    type: "loop",
-    perPage: 3,
-    perMove: 1,
-    interval: 5000,
-    autoplay: true,
-    gap: 40,
-    classes: {
-      prev: "splide__arrow--prev custom-prev-button",
-      next: "splide__arrow--next custom-next-button",
-    },
-    breakpoints: {
-      768: {
-        perPage: 2,
-      },
-      500: {
-        perPage: 1,
-      },
-    },
-  });
-  slider.mount();
+  getBlogs();
 });
+const getBlogs = async () => {
+  try {
+    const res = await GET_BLOGS();
+
+    if (res?.data) {
+      res.data.forEach((d) => {
+        blogs.value.push(d);
+      });
+    }
+  } catch (err) {
+    console.error("No Blog Found");
+  }
+};
 </script>
 
 <template>
-  <div class="w-full overflow-x-hidden">
+  <div class="w-full" v-if="blogs.length">
     <div class="mx-auto container">
-      <section
-        ref="blogSlider"
-        class="splide"
-        aria-label="Splide Basic HTML Example"
-      >
-        <div class="splide__track">
-          <ul class="splide__list">
-            <article
-              v-for="blog in blogs"
-              :key="blog.title"
-              class="splide__slide"
-            >
-              <img src="../assets/images/blog-1.webp" />
-              <header class="flex flex-col gap-4">
-                <div class="flex items-center text-lg mt-4">
-                  <span>2024.01.01</span>
-                  &nbsp;&nbsp;|&nbsp;&nbsp;
-                  <span>{{ blog.author }}</span>
-                </div>
-                <h2 class="line-clamp-2 font-butler text-2xl">
-                  {{ blog.title }}
-                </h2>
-                <span class="line-clamp-3"
-                  >Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took a galley of type and scrambled it to make a type
-                  specimen book. It has survived not only five centuries, but
-                  also the leap into electronic typesetting, remaining
-                  essentially unchanged.</span
-                >
-                <router-link
-                  to="/"
-                  class="text-lg transition ease-in-out hover:underline underline-offset-4"
-                  >Read More</router-link
-                >
-              </header>
-            </article>
-          </ul>
-        </div>
+      <h2 class="font-butler mt-32 text-5xl mb-8">Blog</h2>
+      <Splide :has-track="false" :options="spliderOpt">
+        <SplideTrack>
+          <SplideSlide v-for="blog in blogs" :key="blog.title">
+            <img
+              :src="API_URL + blog.previewImage"
+              class="w-full bg-zinc-100"
+            />
+            <header class="flex flex-col gap-4">
+              <div class="flex items-center text-lg mt-4 text-zinc-500">
+                <span>2024.01.01</span>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <span>{{ blog.author }}</span>
+              </div>
+              <h2 class="line-clamp-2 font-butler text-2xl">
+                {{ blog.title }}
+              </h2>
+              <span class="line-clamp-3 text-zinc-500">{{ blog.summary }}</span>
+              <router-link
+                to="/"
+                class="text-lg transition ease-in-out hover:underline underline-offset-4"
+                >Read More</router-link
+              >
+            </header>
+          </SplideSlide>
+        </SplideTrack>
         <div class="splide__arrows">
           <button
             class="splide__arrow splide__arrow--prev custom-prev-button left-0"
@@ -100,7 +83,7 @@ onMounted(() => {
             aria-label="Previous slide"
             aria-controls="splide01-track"
           >
-            <img src="../assets/images/arrow-left.svg" />
+            <img src="/src/assets/images/arrow-left.svg" />
           </button>
           <button
             class="splide__arrow splide__arrow--next custom-next-button"
@@ -108,16 +91,16 @@ onMounted(() => {
             aria-label="Next slide"
             aria-controls="splide01-track"
           >
-            <img src="../assets/images/arrow-right.svg" />
+            <img src="/src/assets/images/arrow-right.svg" />
           </button>
         </div>
-      </section>
+      </Splide>
     </div>
   </div>
 </template>
 
 <style scoped>
-.splide article img {
+.splide li img {
   aspect-ratio: 1/1;
   object-fit: cover;
 }
@@ -127,8 +110,9 @@ onMounted(() => {
 
 .splide__arrows {
   position: absolute;
-  bottom: 0em;
-  left: 50%;
+  top: -2em;
+  right: 5%;
+  transform: translateX(-50%);
 }
 .splide__track {
   padding-bottom: 5em;

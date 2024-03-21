@@ -18,12 +18,15 @@
     font-family: "Butler";
 }
 
-input {
+input,
+textarea {
     @apply bg-black/5;
     border: none;
+    outline: none;
 }
 
-input:focus {
+input:focus,
+textarea:focus {
     outline: none;
     padding: 6px;
     border-bottom: 2px solid #000000;

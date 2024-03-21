@@ -21,7 +21,6 @@ const Toast = useToast();
 onMounted(async () => {
   const res = await GET_IMAGES();
   try {
-    console.log(res);
     if (res.data?.length) {
       currentImages.value = res.data;
     }
@@ -61,7 +60,7 @@ const updateForm = () => {
 
 <template>
   <div
-    class="border flex items-center justify-center flex-col gap-4 py-10 cursor-pointer"
+    class="border flex items-center justify-center flex-col gap-4 py-24 cursor-pointer"
     @click="toggleModal = true"
   >
     <span class="font-fontello icon-file-image text-4xl"></span>
